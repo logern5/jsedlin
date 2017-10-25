@@ -44,6 +44,12 @@ function edlin(filename){
 			case (cmd=="w"):
 				write(filename);
 				break;
+			case (cmd=="d" || (tokens.length==2) && (tokens[1].charAt(tokens[1].length-1))=="d"):
+				deleteline(parsetokens(tokens));
+				break;
+			case (cmd=="s" || (tokens.length==2) && (tokens[1].charAt(tokens[1].length-1))=="s"):
+				search(parsetokens(tokens));
+				break;
 			default:
 				stdout.WriteLine("E: bad command");
 		}
@@ -51,7 +57,7 @@ function edlin(filename){
 			break;
 		}
 	}
-	WScript.StdIn.Close();
+	WScript.StdOut.Close();
 	WScript.StdIn.Close();
 }
 
@@ -76,11 +82,11 @@ function list(tokens){
 
 function addtext(tokens){
 	var startline = tokens[0]-1;
-	if(tokens[1] == buffer.length-1){
+	if(tokens[1] == buffer.length){
 		var endline=Infinity;
 	}
 	else{
-		var endline = tokens[1];
+		var endline = tokens[1]-1;
 	}
 	var line = startline;
 	for(line=startline;line<=endline;line++){
@@ -117,4 +123,39 @@ function write(filename){
 	fd.Close();
 	var size = FSO.GetFile(filename);
 	stdout.WriteLine(size.size + "C " + buffer.length + "L");
+}
+
+function search(tokens){
+	var startline=tokens[0]-1;
+	//WScript.Echo("TOKENS: " +tokens);
+	//WScript.Echo("TOKEN0: " +tokens[0]);
+	var array=tokens[1].split("?");
+	//WScript.Echo("ARRAY: " +array);
+	var endline=array[0]-1;
+	//WScript.Echo("ENDLINE: " +endline);
+	var searchtext=array[1];
+	//WScript.Echo("SEARCHTEXT: " +searchtext);
+	var count = startline;
+	for (count=startline;count<=endline;count++){
+		//search for text
+		if(buffer[count].search(searchtext)!=-1){
+			stdout.WriteLine(count+1+": "+buffer[count]);
+		}
+	}
+}
+
+function replace(tokens){
+	//add stuff
+}
+
+function deleteline(tokens){
+	var startline = tokens[0]-1;
+	if (tokens[1]==tokens[0]){
+		var endline = tokens[1]+1;
+	}
+	else{
+		var endline = tokens[1];
+	}
+	var count = endline-startline;
+	buffer.splice(startline,count);
 }
