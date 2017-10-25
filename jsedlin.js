@@ -70,7 +70,7 @@ function list(tokens){
 	var endline = tokens[1]-1;
 	var count = startline;
 	for (count=startline;count<=endline;count++){
-		stdout.WriteLine(buffer[count]);
+		stdout.WriteLine(count+1 + ": " + buffer[count]);
 	}
 }
 
@@ -94,7 +94,10 @@ function addtext(tokens){
 }
 
 function parsetokens(tokens){
-	if(tokens.length==2){
+	if(tokens.length==2 && tokens[1].charAt(0)=="$"){
+			tokens[1]=buffer.length;
+	}
+	else if(tokens.length==2 && tokens[1].charAt(0)!="$"){
 		tokens[1] = tokens[1].slice(0,tokens[1].length-1);
 	}
 	else{
