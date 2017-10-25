@@ -83,7 +83,7 @@ function list(tokens){
 function addtext(tokens){
 	var startline = tokens[0]-1;
 	if(tokens[1] == buffer.length){
-		var endline=Infinity;
+		var endline = Infinity;
 	}
 	else{
 		var endline = tokens[1]-1;
@@ -101,7 +101,8 @@ function addtext(tokens){
 
 function parsetokens(tokens){
 	if(tokens.length==2 && tokens[1].charAt(0)=="$"){
-			tokens[1]=buffer.length;
+		tokens[1] = tokens[1].replace("$",buffer.length.toString());
+		tokens[1] = tokens[1].slice(0,tokens[1].length-1);
 	}
 	else if(tokens.length==2 && tokens[1].charAt(0)!="$"){
 		tokens[1] = tokens[1].slice(0,tokens[1].length-1);
@@ -129,7 +130,7 @@ function search(tokens){
 	var startline=tokens[0]-1;
 	//WScript.Echo("TOKENS: " +tokens);
 	//WScript.Echo("TOKEN0: " +tokens[0]);
-	var array=tokens[1].split("?");
+	var array=tokens[1].toString().split("?");
 	//WScript.Echo("ARRAY: " +array);
 	var endline=array[0]-1;
 	//WScript.Echo("ENDLINE: " +endline);
