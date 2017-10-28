@@ -53,6 +53,9 @@ function edlin(filename){
 			case (cmd=="r" || (tokens.length==2) && (tokens[1].charAt(tokens[1].length-1))=="r"):
 				replace(parsetokens(tokens));
 				break;
+			case (cmd=="h"):
+				help();
+				break;
 			default:
 				stdout.WriteLine("E: bad command");
 		}
@@ -172,4 +175,15 @@ function deleteline(tokens){
 	}
 	var count = endline-startline;
 	buffer.splice(startline,count);
+}
+
+function help(){
+	var helptext = "[STARTLINE],[ENDLINE]a: add text from STARTLINE to ENDLINE\r\n";
+	helptext += "[STARTLINE],[ENDLINE]l: list contents of file from STARTLINE to ENDLINE\r\n";
+	helptext += "[STARTLINE],[ENDLINE]?[SEARCHTEXT]s: search for SEARCHTEXT from STARTLINE to ENDLINE\r\n";
+	helptext += "[STARTLINE],[ENDLINE]?[SEARCHTEXT]%%%[REPLACETEXT]r: replace SEARCHTEXT with REPLACETEXT from STARTLINE to ENDLINE\r\n";
+	helptext += "w: write buffer to file\r\n";
+	helptext += "q: quit jsedlin\r\n";
+	helptext += "h: show this help text\r\n";
+	stdout.Write(helptext);
 }
