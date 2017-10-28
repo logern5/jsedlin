@@ -50,6 +50,9 @@ function edlin(filename){
 			case (cmd=="s" || (tokens.length==2) && (tokens[1].charAt(tokens[1].length-1))=="s"):
 				search(parsetokens(tokens));
 				break;
+			case (cmd=="r" || (tokens.length==2) && (tokens[1].charAt(tokens[1].length-1))=="r"):
+				replace(parsetokens(tokens));
+				break;
 			default:
 				stdout.WriteLine("E: bad command");
 		}
@@ -128,14 +131,9 @@ function write(filename){
 
 function search(tokens){
 	var startline=tokens[0]-1;
-	//WScript.Echo("TOKENS: " +tokens);
-	//WScript.Echo("TOKEN0: " +tokens[0]);
 	var array=tokens[1].toString().split("?");
-	//WScript.Echo("ARRAY: " +array);
 	var endline=array[0]-1;
-	//WScript.Echo("ENDLINE: " +endline);
 	var searchtext=array[1];
-	//WScript.Echo("SEARCHTEXT: " +searchtext);
 	var count = startline;
 	for (count=startline;count<=endline;count++){
 		//search for text
@@ -147,6 +145,21 @@ function search(tokens){
 
 function replace(tokens){
 	//add stuff
+	//delimiter is %%% three percent signs
+	var startline=tokens[0]-1;
+	var array=tokens[1].toString().split("?");
+	var endline=array[0]-1;
+	var sarray=array[1].toString().split("%%%");
+	var searchtext=sarray[0];
+	var replacetext=sarray[1];
+	var count = startline;
+	for (count=startline;count<=endline;count++){
+		if(buffer[count].search(searchtext)!=-1){
+			stdout.WriteLine(count+1+": "+buffer[count]);
+			buffer[count] = buffer[count].replace(searchtext,replacetext);
+			stdout.WriteLine(count+1+": "+buffer[count]);
+		}
+	}
 }
 
 function deleteline(tokens){
