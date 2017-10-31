@@ -182,6 +182,8 @@ function help(){
 	helptext += "[STARTLINE],[ENDLINE]l: list contents of file from STARTLINE to ENDLINE\r\n";
 	helptext += "[STARTLINE],[ENDLINE]?[SEARCHTEXT]s: search for SEARCHTEXT from STARTLINE to ENDLINE\r\n";
 	helptext += "[STARTLINE],[ENDLINE]?[SEARCHTEXT]%%%[REPLACETEXT]r: replace SEARCHTEXT with REPLACETEXT from STARTLINE to ENDLINE\r\n";
+	helptext += "[STARTLINE],[ENDLINE]d: delete lines from STARTLINE to ENDLINE\r\n";
+	helptext += "$: a wildcard that represents the last line of the file, can be used as ENDLINE in the above commands\r\n";
 	helptext += "w: write buffer to file\r\n";
 	helptext += "q: quit jsedlin\r\n";
 	helptext += "h: show this help text\r\n";
