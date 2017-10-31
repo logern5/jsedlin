@@ -50,6 +50,12 @@ function edlin(filename){
 			case (cmd=="s" || (tokens.length==2) && (tokens[1].charAt(tokens[1].length-1))=="s"):
 				search(parsetokens(tokens));
 				break;
+			case (cmd=="r" || (tokens.length==2) && (tokens[1].charAt(tokens[1].length-1))=="r"):
+				replace(parsetokens(tokens));
+				break;
+			case (cmd=="h"):
+				help();
+				break;
 			default:
 				stdout.WriteLine("E: bad command");
 		}
@@ -128,14 +134,9 @@ function write(filename){
 
 function search(tokens){
 	var startline=tokens[0]-1;
-	//WScript.Echo("TOKENS: " +tokens);
-	//WScript.Echo("TOKEN0: " +tokens[0]);
 	var array=tokens[1].toString().split("?");
-	//WScript.Echo("ARRAY: " +array);
 	var endline=array[0]-1;
-	//WScript.Echo("ENDLINE: " +endline);
 	var searchtext=array[1];
-	//WScript.Echo("SEARCHTEXT: " +searchtext);
 	var count = startline;
 	for (count=startline;count<=endline;count++){
 		//search for text
@@ -147,6 +148,21 @@ function search(tokens){
 
 function replace(tokens){
 	//add stuff
+	//delimiter is %%% three percent signs
+	var startline=tokens[0]-1;
+	var array=tokens[1].toString().split("?");
+	var endline=array[0]-1;
+	var sarray=array[1].toString().split("%%%");
+	var searchtext=sarray[0];
+	var replacetext=sarray[1];
+	var count = startline;
+	for (count=startline;count<=endline;count++){
+		if(buffer[count].search(searchtext)!=-1){
+			stdout.WriteLine(count+1+": "+buffer[count]);
+			buffer[count] = buffer[count].replace(searchtext,replacetext);
+			stdout.WriteLine(count+1+": "+buffer[count]);
+		}
+	}
 }
 
 function deleteline(tokens){
@@ -159,4 +175,15 @@ function deleteline(tokens){
 	}
 	var count = endline-startline;
 	buffer.splice(startline,count);
+}
+
+function help(){
+	var helptext = "[STARTLINE],[ENDLINE]a: add text from STARTLINE to ENDLINE\r\n";
+	helptext += "[STARTLINE],[ENDLINE]l: list contents of file from STARTLINE to ENDLINE\r\n";
+	helptext += "[STARTLINE],[ENDLINE]?[SEARCHTEXT]s: search for SEARCHTEXT from STARTLINE to ENDLINE\r\n";
+	helptext += "[STARTLINE],[ENDLINE]?[SEARCHTEXT]%%%[REPLACETEXT]r: replace SEARCHTEXT with REPLACETEXT from STARTLINE to ENDLINE\r\n";
+	helptext += "w: write buffer to file\r\n";
+	helptext += "q: quit jsedlin\r\n";
+	helptext += "h: show this help text\r\n";
+	stdout.Write(helptext);
 }
